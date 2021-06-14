@@ -3,26 +3,31 @@ let seteoTiempo= 0;
 
 let segundosTotal = seteoTiempo * 60; 
 
+let intervalo;
+
 const formulario = document.querySelector('#formulario');
 
-const input = document.querySelector('input');
+const input = document.querySelector('#set-in');
 
 const temporizador = document.getElementById("temporizador");
 
+const reset = document.getElementById("btn-reset");
+
 formulario.addEventListener('submit', validarFormulario);
 input.addEventListener('input',renderizaSeteo);
+reset.addEventListener('click',resetearTemporizador);
 
 
 function validarFormulario(e){
     
     e.preventDefault();
-    if(e.target[0].value ===''){
+    if(e.target[2].value ===''){
         alert('Por favor, ingresa un número')
     }else{
 
-        seteoTiempo=e.target[0].value;
+        seteoTiempo=e.target[2].value;
         segundosTotal = seteoTiempo * 60; 
-        setInterval(realizarConteo, 1000);
+        intervalo = window.setInterval(realizarConteo, 1000);
     }
 
 }
@@ -33,6 +38,7 @@ function renderizaSeteo(e){
         temporizador.innerHTML = `00:00`;
     }else{
         minutos = e.target.value;
+        console.log(minutos);
         temporizador.innerHTML = `${minutos}:00`
     }
 
@@ -51,9 +57,17 @@ function realizarConteo(){
         segundosTotal--
     }else{
         sonido.play();
+        clearInterval(intervalo);
         
     }
 };
+
+function resetearTemporizador(){
+    
+    sonido.pause();
+    clearInterval(intervalo);
+    temporizador.innerHTML = `00:00`;
+}
 
 const cargarSonido = function (fuente) {
     const sonido = document.createElement("audio");
